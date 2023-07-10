@@ -5,7 +5,7 @@ BINARYOUTPUT = bin/fun
 
 .PHONY: all clean bin
 
-all: $(OBJECTS) 
+all: $(OBJECTS) $(BINARYOUTPUT)
 
 clean:
 	rm -rf lib

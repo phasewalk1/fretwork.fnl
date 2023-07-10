@@ -1,14 +1,8 @@
 (local os (require :os))
+(local bs (require :bootstrapper.bootstrap))
+(local util (require :util))
 
-(fn mkdir [path]
-  (os.execute (.. "mkdir " path)))
-
-(fn in-list [lst val]
-  (var found? false)
-  (for [i 1 (length lst)]
-    (if (= (. lst i) val)
-      (set found true)))
-  found?)
+(bs.lib)
 
 (fn compile-file [file ?opts]
   (let [outpath (or (and ?opts (. ?opts "--outpath") (next ?opts)) (string.gsub file ".fnl" ".lua"))]
@@ -22,11 +16,11 @@
     (do
       (print "Initializing...")
       (print (.. "Creating a fun project at: " path))
-      (mkdir path)
+      (util.mkdir path)
       (local srcpath (.. path "/src/"))
       (local buildpath (.. path "/build/"))
-      (mkdir srcpath)
-      (mkdir buildpath)
+      (util.mkdir srcpath)
+      (util.mkdir buildpath)
       (os.execute (.. "echo '(print :hello-world)' >> " srcpath "main.fnl"))
       (when (and ?opts (. ?opts "--makefile"))
         (os.execute (.. "touch " path "/Makefile")))
