@@ -1,16 +1,16 @@
 (local os (require :os))
-(local bs (require :bootstrapper.bootstrap))
 (local util (require :util))
 
-(bs.lib)
-
-(fn compile-file [file ?opts]
+;; Wrapper around fennel --compile
+(lambda compile-file [file ?opts]
   (let [outpath (or (and ?opts (. ?opts "--outpath") (next ?opts)) (string.gsub file ".fnl" ".lua"))]
     (os.execute (.. "fennel --compile " file " > " outpath))
     (print (.. "Compiler outputted: " outpath))))
 
-;; Initialize a new fennel project
-(fn init [path ?opts]
+;; Initialize a new fennel project as a git repository
+;; -- Options:
+;; --   '--makefile': generate a Makefile template 
+(lambda init [path ?opts]
   (if (not path)
     (print "Please provide a path.")
     (do
@@ -26,33 +26,25 @@
         (os.execute (.. "touch " path "/Makefile")))
       (os.execute (.. "cd " path " && git init > /dev/null 2>&1")))))
 
-(local command-table {:init init :compile compile-file})
+(local command-table {:init init
+                      :compile compile-file})
 
-(fn subseq [t start]
-  (local result [])
-  (for [i start (length t)]
-    (table.insert result (. t i)))
-  result)
-
-(fn process-command [command args]
+(lambda process-command [command args]
   (let [handler (. command-table command)]
     (if handler
       (let [options {}]
-        (each [_ opt (ipairs (subseq args 2))]
+        (each [_ opt (ipairs (util.subseq args 2))]
           (tset options opt true))
         (handler (. args 1) options))
       (print "Unknown command."))))
 
-(fn take-args []
-  (local argv [])
-  (if (> (length arg) 0)
-    (do
-      (each [i v (ipairs arg)]
-        (table.insert argv v))))
-  argv)
+(lambda do-main []
+  (local bs (require :bootstrapper.bootstrap))
+  (bs.lib)
 
-(local argv (take-args))
-(local cmd (. argv 1))
-(table.remove argv 1)
-(process-command cmd argv)
+  (local opts (util.take-args))
+  (local cmd (. opts 1))
+  (table.remove opts 1)
+  (process-command cmd opts))
 
+(do-main)
