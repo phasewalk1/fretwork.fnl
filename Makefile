@@ -1,11 +1,22 @@
+DESTDIR := $(HOME)/.config/fun
+BINARYDESTDIR := $(HOME)/.local/bin
+LIBDESTDIR := $(HOME)/.config/fun/lib
+MAINFNL = main.fnl
+BINARYOUTPUT = $(BINARYDESTDIR)/fun
+
 SOURCES := $(shell find . -name '*.fnl')
 OBJECTS := $(patsubst %.fnl, lib/%.lua, $(SOURCES))
-MAINFNL = main.fnl
-BINARYOUTPUT = bin/fun
+
 
 .PHONY: all clean bin
 
 all: $(OBJECTS) $(BINARYOUTPUT)
+
+install: $(OBJECTS) $(BINARYOUTPUT)
+	mkdir -p $(DESTDIR)
+	mkdir -p $(LIBDESTDIR)
+	cp $(BINARYOUTPUT) $(BINARYDESTDIR)
+	cp -r $(OBJECTS) $(LIBDESTDIR})
 
 clean:
 	rm -rf lib
