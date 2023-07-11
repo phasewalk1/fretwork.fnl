@@ -1,6 +1,8 @@
 # fretwork.fnl 
 adorn your fennel code. 
 
+> Advisory: This an extremely rough pre-alpha hack (not ready for use). The goal for a v1.0-1 release is to provide the following features:
+
 ## Features
 
 ### Initialize new Fennel projects
