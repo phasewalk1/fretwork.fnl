@@ -1,6 +1,6 @@
 SOURCES := $(shell find . -name '*.fnl')
 OBJECTS := $(patsubst %.fnl, lib/%.lua, $(SOURCES))
-MAINFNL = fun.fnl
+MAINFNL = main.fnl
 BINARYOUTPUT = bin/fun
 
 .PHONY: all clean bin

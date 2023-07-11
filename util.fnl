@@ -6,6 +6,12 @@
         (table.insert argv v))))
   argv)
 
+(lambda keys [tbl]
+  (local keys [])
+  (each [k v (pairs tbl)]
+    (table.insert keys k))
+  keys)
+
 (lambda mkdir [path]
   (os.execute (.. "mkdir " path)))
 
@@ -23,4 +29,5 @@
   found?)
 
 {:in-list in-list :mkdir mkdir
- :take-args take-args :subseq subseq}
+ :take-args take-args :subseq subseq
+ :keys keys}
